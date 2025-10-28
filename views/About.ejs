@@ -1,0 +1,129 @@
+<!-- NEW FILE: /views/about.ejs -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title><%= title %></title>
+  <meta name="description" content="<%= meta.description %>">
+  <meta property="og:title" content="<%= title %>">
+  <meta property="og:description" content="<%= meta.description %>">
+  <meta property="og:type" content="profile">
+  <meta property="og:url" content="<%= meta.url %>">
+  <link rel="stylesheet" href="/style.css">
+
+  <% if (profile.avatar) { %><meta property="og:image" content="<%= profile.avatar %>"><% } %>
+  <style>
+
+    .avatar { width:140px; height:140px; border-radius:50%; background:#222; object-fit:cover; }
+    h1 { margin:0 0 6px; font-size: clamp(28px, 3.5vw, 40px); }
+    .tagline { color:var(--muted); margin:6px 0 12px; }
+    .chip { display:inline-block; background:#1f1f24; padding:6px 10px; border-radius:999px; color:#ccc; margin-inline-start:6px; font-size:13px; }
+    .wrap section { background:var(--card); border-radius: var(--br); padding:20px; margin:18px 0; }
+    h2 { margin:0 0 10px; font-size: 20px; }
+    ul.clean { list-style:none; padding:0; margin:0; }
+    li.item { padding:12px 0; border-bottom:1px solid #222; }
+    li.item:last-child { border-bottom:0; }
+    .grid { display:grid; gap:14px; }
+    @media (min-width: 780px){ .grid-2 { grid-template-columns: 1fr 1fr; } }
+    .muted { color:var(--muted); }
+    .kbd { background:#ccc; padding:2px 8px; border-radius:6px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; }
+    footer { text-align:center; color:#777; margin: 24px 0 12px; font-size: 13px; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Person",
+    "name":"<%= profile.name %>",
+    "alternateName":["<%= profile.shortName %>"],
+    "jobTitle":"Poet",
+    "birthDate":"<%= profile.birth.g || '' %>",
+    "birthPlace":"<%= profile.birth.place %>",
+    "url":"<%= meta.url %>",
+    "image":"<%= profile.avatar || '' %>"
+  }
+  </script>
+</head>
+<body>
+    <%- include('header'); %>
+
+  <div class="wrap">
+    <header class="hero">
+      <% if (profile.avatar) { %>
+        <img class="avatar" src="<%= profile.avatar %>" alt="صورة <%= profile.shortName %>">
+      <% } else { %>
+        <div class="avatar" aria-hidden="true"></div>
+      <% } %>
+      <div>
+        <h1>عن <span class="kbd"><%= profile.shortName %></span></h1>
+        <div class="tagline"><%= profile.tagline %></div>
+        <div class="muted">
+          مولود في <b><%= profile.birth.place %></b>، <%= profile.birth.g %>م (<%= profile.birth.h %>)
+          <% if (profile.stats) { %>
+            <span class="chip">قصائد: <%= profile.stats.poems %></span>
+            <span class="chip">مقالات: <%= profile.stats.articles %></span>
+          <% } %>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <h2>سيرة مختصرة</h2>
+      <div class="grid">
+        <% profile.bio.forEach(p => { %>
+          <p class="muted"><%= p %></p>
+        <% }) %>
+      </div>
+    </section>
+
+    <section class="grid grid-2">
+      <div>
+        <h2>محطات</h2>
+        <ul class="clean">
+          <% profile.milestones.forEach(m => { %>
+            <li class="item">
+              <b><%= m.year %></b> — <%= m.title %><br/>
+              <span class="muted"><%= m.desc %></span>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+      <div>
+        <h2>أعمال مختارة</h2>
+        <ul class="clean">
+          <% profile.works.forEach(w => { %>
+            <li class="item">
+              <b><%= w.title %></b> <span class="muted">(<%= w.type %><%= w.year ? " • " + w.year : "" %>)</span>
+              <% if (w.note) { %><div class="muted"><%= w.note %></div><% } %>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>قالوا عنه</h2>
+      <ul class="clean">
+        <% profile.quotes.forEach(q => { %>
+          <li class="item">
+            “<%= q.text %>”
+            <div class="muted">— <%= q.by %></div>
+          </li>
+        <% }) %>
+      </ul>
+    </section>
+
+    <section>
+      <h2>روابط</h2>
+      <ul class="clean">
+        <% profile.links.forEach(l => { %>
+          <li class="item"><a href="<%= l.href %>" target="_blank" rel="noopener <%= l.rel || '' %>"><%= l.label %></a></li>
+        <% }) %>
+      </ul>
+    </section>
+
+</div>
+<%- include('footer'); %>
+
+</body>
+</html>

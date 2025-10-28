@@ -1,0 +1,137 @@
+<!-- ========== /views/articles_index.ejs (مع بانر + مكونات) ========== -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title><%= title %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    .page-hero{
+      background:linear-gradient(180deg,var(--sand-100),var(--sand-200));
+      border-bottom:1px solid rgba(0,0,0,.06);
+    }
+    [data-theme="night"] .page-hero{
+      background:linear-gradient(180deg,var(--sand-300),var(--sand-400));
+      border-color:rgba(255,255,255,.08);
+    }
+    .page-hero .inner{display:grid;gap:14px;grid-template-columns:1fr;padding:28px 0}
+    .crumbs{font-size:14px;color:var(--muted)}
+    .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .tools .input{min-width:220px}
+    .head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0}
+    .pager{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}
+    .pagebtn{min-width:40px;text-align:center;padding:8px 12px;border:1px solid rgba(0,0,0,.1);border-radius:12px;background:var(--card)}
+    .pagebtn.active{font-weight:800;border-color:var(--oasis)}
+    .pagebtn[aria-disabled="true"]{opacity:.5;pointer-events:none}
+  </style>
+</head>
+<body>
+  <%- include('header'); %>
+
+  <!-- Banner علوي -->
+  <section class="page-hero">
+    <div class="container inner">
+      <nav class="crumbs" aria-label="مسار الصفحة">
+        <a href="/">الرئيسية</a> › <span>المقالات</span>
+      </nav>
+      <div class="head" style="margin:0">
+        <h1 class="kufi" style="margin:0">كل المقالات</h1>
+        <div class="muted">المجموع: <strong><%= count %></strong></div>
+      </div>
+      <div class="tools" role="region" aria-label="أدوات">
+        <input id="search" class="input" type="search" inputmode="search" placeholder="ابحث عن مقال…" aria-label="بحث">
+        <select id="sort" class="input" aria-label="ترتيب">
+          <option value="new">الأحدث أولًا</option>
+          <option value="old">الأقدم أولًا</option>
+          <option value="az">عنوان: أ-ي</option>
+          <option value="za">عنوان: ي-أ</option>
+        </select>
+        <span class="pill">نتائج من <%= (page-1)*limit+1 %> إلى <%= Math.min(page*limit, count) %></span>
+      </div>
+    </div>
+    <!-- خلفية نخيل خفيفة -->
+    <div class="palms" aria-hidden="true"></div>
+  </section>
+
+  <main class="container" style="padding-top:24px">
+    <div id="articleGrid" class="grid articles" role="list">
+      <% articles.forEach(a => { %>
+        <article class="card show" role="listitem"
+          data-title="<%- a.title %>" data-tags="<%- (a.tags||[]).join(', ') %>"
+          data-date="<%= +new Date(a.createdAt) %>">
+          <% if (a.imageUrl) { %>
+            <img src="<%= a.imageUrl %>" alt="" loading="lazy" decoding="async"
+                 style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:10px">
+          <% } %>
+          <span class="pill">مقال</span>
+          <h3 style="margin:6px 0 8px"><%= a.title %></h3>
+          <p class="excerpt"><%= a.excerpt.substring(0, 50) || '' %></p>
+          <div class="meta">
+            <span><%= new Date(a.createdAt).toLocaleDateString('ar-EG') %></span>
+            <span class="chip"><%= (a.tags||[])[0] || 'عام' %></span>
+          </div>
+          <div class="actions">
+            <a class="btn" href="/article/<%= a.slug %>">تابع القراءة →</a>
+            <button class="btn later" type="button"
+              onclick="saveLater({id:'<%= a.slug %>', type:'article', title:`<%- a.title %>`, url:'/article/<%= a.slug %>'})">لاحقًا ★</button>
+          </div>
+        </article>
+      <% }) %>
+    </div>
+
+    <!-- Pagination -->
+    <nav class="pager mt-4" aria-label="صفحات">
+      <a class="pagebtn" href="/articles?page=<%= Math.max(page-1,1) %>&limit=<%= limit %>" aria-disabled="<%= page===1 %>">السابق</a>
+      <% let last=0; pages.forEach(n => { %>
+        <% if (n - last > 1) { %><span class="muted">…</span><% } %>
+        <a class="pagebtn <%= n===page ? 'active':'' %>" href="/articles?page=<%= n %>&limit=<%= limit %>"><%= n %></a>
+        <% last=n; %>
+      <% }) %>
+      <a class="pagebtn" href="/articles?page=<%= Math.min(page+1,totalPages) %>&limit=<%= limit %>" aria-disabled="<%= page===totalPages %>">التالي</a>
+    </nav>
+  </main>
+
+  <%- include('footer'); %>
+
+  <script>
+    // حالة النهار/الليل مفعّلة من الهيدر
+
+    // بحث فوري + ترتيب عميل
+    (function(){
+      const grid=document.getElementById('articleGrid');
+      const search=document.getElementById('search');
+      const sort=document.getElementById('sort');
+
+      function filter(){
+        const q=(search.value||'').trim().toLowerCase();
+        [...grid.children].forEach(card=>{
+          const hay=(card.dataset.title+' '+card.dataset.tags).toLowerCase();
+          card.style.display = hay.includes(q) ? '' : 'none';
+        });
+      }
+      function sortCards(){
+        const cards=[...grid.children].filter(el=>el.style.display!=='none');
+        const mode=sort.value;
+        cards.sort((a,b)=>{
+          if(mode==='new') return (+b.dataset.date) - (+a.dataset.date);
+          if(mode==='old') return (+a.dataset.date) - (+b.dataset.date);
+          if(mode==='az')  return a.dataset.title.localeCompare(b.dataset.title,'ar');
+          if(mode==='za')  return b.dataset.title.localeCompare(a.dataset.title,'ar');
+          return 0;
+        });
+        cards.forEach(c=>grid.appendChild(c));
+      }
+      if(search) search.addEventListener('input', ()=>{ filter(); sortCards(); });
+      if(sort) sort.addEventListener('change', sortCards);
+    })();
+
+    // Read Later (مشترك)
+    const LATER_KEY='roshdi_later_v1';
+    function getLater(){ try{ return JSON.parse(localStorage.getItem(LATER_KEY)||'[]'); }catch{ return []; } }
+    function setLater(list){ localStorage.setItem(LATER_KEY, JSON.stringify(list)); }
+    function saveLater(item){ const list=getLater(); if(!list.some(x=>x.id===item.id&&x.type===item.type)){ list.push(item); setLater(list); } alert('أُضيفت إلى "لقراءة لاحقًا".'); }
+  </script>
+</body>
+</html>

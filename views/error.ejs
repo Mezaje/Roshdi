@@ -1,0 +1,35 @@
+// 2) أنشئ هذا الملف: /views/error.ejs
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>.wrap{max-width:700px;margin:auto;padding:32px;text-align:center}</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="kufi">حدث خطأ</h1>
+    <p class="muted">الحالة: <%= status %></p>
+    <p><%= message %></p>
+    <p><a class="btn" href="/">عودة للرئيسية</a></p>
+  </div>
+</body>
+</html>
+
+// 3) أنشئ هذا الملف: /views/404.ejs  (للتأكد من وجوده أيضًا)
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>.wrap{max-width:700px;margin:auto;padding:32px;text-align:center}</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="kufi">الصفحة غير موجودة</h1>
+    <p class="muted">تأكد من الرابط أو عد إلى <a href="/">الرئيسية</a>.</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!-- =========================
+     NEW: /views/admin/poems_edit.ejs
+     ========================= -->
+     <%- include('layout_head', { title }); %>
+     <h2>تعديل قصيدة</h2>
+     
+     <form method="post" action="/admin/poems/<%= poem._id %>" enctype="multipart/form-data" class="admin-card">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+
+       <label>العنوان</label>
+       <input name="title" required value="<%- poem.title %>" />
+     
+       <div class="form-row">
+         <div>
+           <label>البحر</label>
+           <input name="meter" value="<%- poem.meter || '' %>" />
+         </div>
+         <div>
+           <label>وسوم (مفصولة بفواصل)</label>
+           <input name="tags" value="<%- (poem.tags||[]).join(', ') %>" />
+         </div>
+       </div>
+     
+       <label>مقتطف</label>
+       <textarea name="excerpt" rows="3"><%- poem.excerpt || '' %></textarea>
+     
+       <label>صورة الغلاف</label>
+       <% if (poem.imageUrl) { %>
+         <div class="mt-2 mb-2">
+           <img src="<%= poem.imageUrl %>" alt="" class="round shadow" style="max-width:240px">
+         </div>
+         <label style="display:flex;gap:8px;align-items:center">
+           <input type="checkbox" name="removeImage"> إزالة الصورة الحالية
+         </label>
+       <% } %>
+       <input type="file" name="image" accept="image/*" onchange="previewImg(this,'pv')" />
+       <div id="pv" class="mt-2"></div>
+     
+       <label>نص القصيدة</label>
+       <textarea name="body" rows="10" required><%- poem.body %></textarea>
+     
+       <div class="form-row">
+         <div>
+           <label>تاريخ (اختياري)</label>
+           <input name="createdAt" type="date" value="<%= poem.createdAt ? new Date(poem.createdAt).toISOString().slice(0,10) : '' %>" />
+         </div>
+       </div>
+     
+       <div class="mt-3">
+         <button class="btn" type="submit">حفظ التعديلات</button>
+         <a class="btn secondary" href="/admin/poems">إلغاء</a>
+       </div>
+     </form>
+     
+     <script>
+     function previewImg(inp, id){
+       const el=document.getElementById(id); if(!inp.files||!inp.files[0]) return el.innerHTML='';
+       const url=URL.createObjectURL(inp.files[0]);
+       el.innerHTML=`<img src="${url}" alt="preview" class="round shadow" style="max-width:240px">`;
+     }
+     </script>
+     <%- include('layout_foot'); %>
+     

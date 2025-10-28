@@ -1,0 +1,41 @@
+<!-- /views/admin/poems_new.ejs (محدّث: رفع صورة + معاينة) -->
+<%- include('layout_head', { title }); %>
+<h2>إضافة قصيدة</h2>
+<form method="post" action="/admin/poems" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>"/>
+    <label>العنوان</label>
+  <input name="title" required />
+  <div class="form-row">
+    <div>
+      <label>البحر</label>
+      <input name="meter" placeholder="بحر الكامل…" />
+    </div>
+    <div>
+      <label>وسوم (مفصولة بفواصل)</label>
+      <input name="tags" placeholder="غزل, صوفي…" />
+    </div>
+  </div>
+  <label>مقتطف</label>
+  <textarea name="excerpt" rows="3"></textarea>
+
+  <label>صورة الغلاف (اختياري)</label>
+  <input type="file" name="image" accept="image/*" onchange="previewImg(this,'pv')" />
+  <div id="pv" class="mt-2"></div>
+
+  <label>نص القصيدة</label>
+  <textarea name="body" rows="10" required></textarea>
+  <div class="form-row">
+    <div>
+      <label>تاريخ (اختياري)</label>
+      <input name="createdAt" type="date" />
+    </div>
+  </div>
+  <button class="btn" type="submit">حفظ</button>
+</form>
+<script>
+function previewImg(inp, id){
+  const el=document.getElementById(id); if(!inp.files||!inp.files[0]) return el.innerHTML='';
+  const url=URL.createObjectURL(inp.files[0]); el.innerHTML=`<img src="${url}" alt="preview" class="round shadow" style="max-width:240px">`;
+}
+</script>
+<%- include('layout_foot'); %>

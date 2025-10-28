@@ -1,0 +1,186 @@
+<!-- =================== /views/article.ejs (نسخة احترافية) =================== -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title><%= title %> | مقال</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    /* تخصيصات خفيفة للصفحة */
+    .page-hero{
+      position:relative;overflow:hidden;color:var(--text);
+      background:linear-gradient(180deg,var(--sand-100),var(--sand-200));
+      border-bottom:1px solid rgba(0,0,0,.06)
+    }
+    [data-theme="night"] .page-hero{
+      background:linear-gradient(180deg,var(--sand-300),var(--sand-400));
+      border-color:rgba(255,255,255,.08)
+    }
+    .hero-bg{
+      position:absolute;inset:0;opacity:.22;filter:blur(12px) saturate(1.1);transform:scale(1.1);
+      background-position:center;background-size:cover
+    }
+    .hero-overlay{position:relative;z-index:1}
+    .hero-inner{display:grid;gap:10px;padding:26px 0}
+    .crumbs{font-size:14px;color:var(--muted)}
+    .article-head{display:flex;flex-direction:column;gap:8px}
+    .article-meta{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:14px}
+    .article-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .cover{border-radius:16px;overflow:hidden;margin:14px 0}
+    .cover img{width:100%;max-height:460px;object-fit:cover;display:block}
+    .article-wrap{max-width:920px;margin:auto;padding:24px}
+    .content{white-space:pre-wrap;line-height:2; font-size:clamp(16px,3.8vw,20px); font-family:"Noto Naskh Arabic",serif}
+    .quickbar{position:sticky;top:66px;z-index:5;display:flex;gap:8px;flex-wrap:wrap;background:var(--card);border:1px solid rgba(0,0,0,.06);padding:10px;border-radius:14px}
+    @media (max-width:640px){ .article-wrap{padding:16px} .quickbar{top:58px} }
+    .pager{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:16px}
+    .pager a{display:inline-flex;align-items:center;gap:8px}
+    .read-progress{position:fixed;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--oasis),var(--accent));transform-origin:left;transform:scaleX(0);z-index:60}
+  </style>
+</head>
+<body>
+  <div class="read-progress" id="readProgress" aria-hidden="true"></div>
+
+  <%- include('header'); %>
+
+  <!-- Banner علوي (يستخدم صورة الغلاف كخلفية ضبابية إن وُجدت) -->
+  <section class="page-hero">
+    <% if (a.imageUrl) { %>
+      <div class="hero-bg" style="background-image:url('<%= a.imageUrl %>')"></div>
+    <% } %>
+    <div class="hero-overlay">
+      <div class="container hero-inner">
+        <nav class="crumbs" aria-label="مسار الصفحة">
+          <a href="/">الرئيسية</a> › <a href="/articles">المقالات</a> › <span><%= a.title %></span>
+        </nav>
+
+        <header class="article-head">
+          <h1 class="kufi" style="margin:0"><%= a.title %></h1>
+          <div class="article-meta">
+            <% (a.tags||[]).slice(0,4).forEach(t=>{ %><span class="chip"><%= t %></span><% }) %>
+            <span class="muted"><%= new Date(a.createdAt).toLocaleDateString('ar-EG') %></span>
+          </div>
+          <div class="article-actions">
+            <button class="btn later" type="button"
+              onclick="saveLater({id:'<%= a.slug %>', type:'article', title:`<%- a.title %>`, url:'/article/<%= a.slug %>'})">اقرأ لاحقًا ★</button>
+            <a class="btn" href="#" onclick="shareLink('<%- a.title %>');return false;">مشاركة</a>
+            <button class="btn secondary" type="button" onclick="window.print()">طباعة</button>
+            <a class="btn" href="/articles">← كل المقالات</a>
+          </div>
+        </header>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <div class="container article-wrap">
+      <% if (a.imageUrl) { %>
+        <figure class="cover shadow">
+          <img src="<%= a.imageUrl %>" alt="غلاف المقال">
+        </figure>
+      <% } %>
+
+      <!-- شريط إجراءات سريع (يبقى مثبتًا) -->
+      <div class="quickbar" role="toolbar" aria-label="إجراءات سريعة">
+        <button class="btn later" type="button"
+          onclick="saveLater({id:'<%= a.slug %>', type:'article', title:`<%- a.title %>`, url:'/article/<%= a.slug %>'})">اقرأ لاحقًا ★</button>
+        <a class="btn" href="#" onclick="shareLink('<%- a.title %>');return false;">مشاركة</a>
+        <button class="btn secondary" type="button" onclick="window.print()">طباعة</button>
+        <a class="btn" href="/articles">← كل المقالات</a>
+      </div>
+
+      <!-- متن المقال -->
+      <article class="content mt-3 mb-3"><%= a.content %></article>
+
+      <!-- السابق/التالي (اختياري) -->
+      <% if (typeof prevArticle !== 'undefined' || typeof nextArticle !== 'undefined') { %>
+        <div class="pager">
+          <div>
+            <% if (prevArticle) { %>
+              <a class="btn" href="/article/<%= prevArticle.slug %>">← السابق:
+                <span style="max-width:180px;display:inline-block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><%= prevArticle.title %></span>
+              </a>
+            <% } %>
+          </div>
+          <div>
+            <% if (nextArticle) { %>
+              <a class="btn" href="/article/<%= nextArticle.slug %>">
+                <span style="max-width:180px;display:inline-block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><%= nextArticle.title %></span> :التالي →
+              </a>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- مقالات أخرى (اختياري) -->
+    <% if (typeof relatedArticles !== 'undefined') { %>
+    <section id="more" class="mt-5">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">مقالات أخرى</h2>
+          <a class="btn" href="/articles">عرض المزيد →</a>
+        </div>
+        <% if ((relatedArticles||[]).length === 0) { %>
+          <p class="muted">لا توجد اقتراحات متاحة الآن.</p>
+        <% } %>
+        <div class="grid articles">
+          <% (relatedArticles||[]).forEach(r => { %>
+            <article class="card show" data-type="article" data-title="<%= r.title %>">
+              <% if (r.imageUrl) { %>
+                <img src="<%= r.imageUrl %>" alt="" style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:10px">
+              <% } %>
+              <span class="pill">مقال</span>
+              <h3 style="margin:6px 0 8px"><%= r.title %></h3>
+              <p class="excerpt"><%= r.excerpt || '' %></p>
+              <div class="meta">
+                <span><%= new Date(r.createdAt).toLocaleDateString('ar-EG') %></span>
+                <span class="chip"><%= (r.tags||[])[0] || 'عام' %></span>
+              </div>
+              <div class="actions">
+                <a class="btn" href="/article/<%= r.slug %>">تابع القراءة →</a>
+                <button class="btn later" type="button"
+                  onclick="saveLater({id:'<%= r.slug %>', type:'article', title:`<%- r.title %>`, url:'/article/<%= r.slug %>'})">لاحقًا ★</button>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+    <% } %>
+  </main>
+
+  <%- include('footer'); %>
+
+  <script>
+    // شريط تقدّم القراءة
+    (function(){
+      const bar=document.getElementById('readProgress');
+      function onScroll(){
+        const doc=document.documentElement, b=document.body;
+        const height=(doc.scrollHeight - doc.clientHeight);
+        const scrolled = (height>0) ? ((doc.scrollTop || b.scrollTop)/height) : 0;
+        bar.style.transform = `scaleX(${scrolled})`;
+      }
+      document.addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+    })();
+
+    // مشاركة
+    function shareLink(title){
+      if(navigator.share){ navigator.share({ title, url: location.href }).catch(()=>{}); }
+      else{ prompt('انسخ الرابط:', location.href); }
+    }
+
+    // Read Later
+    const LATER_KEY='roshdi_later_v1';
+    function getLater(){ try{ return JSON.parse(localStorage.getItem(LATER_KEY)||'[]'); }catch{ return []; } }
+    function setLater(list){ localStorage.setItem(LATER_KEY, JSON.stringify(list)); }
+    function saveLater(item){
+      const list=getLater();
+      if(!list.some(x=>x.id===item.id && x.type===item.type)){ list.push(item); setLater(list); }
+      alert('أُضيفت إلى "لقراءة لاحقًا".');
+    }
+  </script>
+</body>
+</html>

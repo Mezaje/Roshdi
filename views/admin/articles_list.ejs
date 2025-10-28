@@ -1,0 +1,40 @@
+<!-- /views/admin/articles_list.ejs (محدّث: مصغّرات) -->
+<%- include('layout_head', { title }); %>
+<h2>المقالات</h2>
+<% if (flash) { %><div class="admin-card" style="border-left:5px solid #2f6b6d">تمت العملية: <%= flash %></div><% } %>
+<p><a class="btn" href="/admin/articles/new">+ مقال جديد</a></p>
+<div class="admin-table-wrap">
+<table>
+  <thead>
+    <tr><th>الغلاف</th><th>العنوان</th><th>Slug</th><th>الوسوم</th><th>التاريخ</th><th>إجراءات</th></tr>
+  </thead>
+  <tbody>
+    <% articles.forEach(a => { %>
+      <tr>
+        <td style="width:84px">
+          <% if (a.imageUrl) { %>
+            <img src="<%= a.imageUrl %>" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:10px">
+          <% } else { %>
+            <div class="muted" style="font-size:12px">لا صورة</div>
+          <% } %>
+        </td>
+        <td><a href="/article/<%= a.slug %>" target="_blank"><%= a.title %></a></td>
+        <td><code><%= a.slug %></code></td>
+        <td><%= (a.tags||[]).join('، ') %></td>
+        <td><%= new Date(a.createdAt).toLocaleDateString('ar-EG') %></td>
+        <td>
+          <a class="btn" href="/admin/articles/<%= a._id %>/edit">تعديل</a>
+          <form class="inline" method="post" action="/admin/articles/<%= a._id %>/delete"
+                onsubmit="return confirm('حذف نهائي؟ ستُحذف الصورة إن وُجدت.')">
+            <button class="btn danger" type="submit">حذف</button>
+          </form>
+        </td>
+        <!-- /views/admin/articles_list.ejs (جزء الإجراءات) -->
+
+
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+</div>
+<%- include('layout_foot'); %>

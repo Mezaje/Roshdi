@@ -1,0 +1,308 @@
+<!-- /views/home.ejs (نسخة محسّنة: عن الشاعر + Marquee احترافي) -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title><%= title %></title>
+  <meta name="description" content="منصّة الشاعر رشدي: قصائد عربية ومقالات نقدية ومعرفية." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+  <!-- FIX: المسار الصحيح -->
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    /* تحسينات خفيفة للقسمين فقط */
+    .about-wrap{display:grid;grid-template-columns:160px 1fr;gap:16px;align-items:center}
+    .about-img{width:160px;height:160px;border-radius:50%;object-fit:cover;box-shadow:var(--shadow)}
+    .about-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .badge{padding:6px 10px;border:1px solid rgba(0,0,0,.08);border-radius:999px;background:var(--card);font-size:13px}
+    @media (max-width:720px){.about-wrap{grid-template-columns:1fr;text-align:center}.about-actions{justify-content:center}.badges{justify-content:center}}
+    .section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+    /* Marquee عناصر أكثر تماسكًا */
+    .marquee-quote{white-space:nowrap;opacity:.9}
+    .marquee-sep{opacity:.35;margin:0 10px}
+  </style>
+</head>
+<body>
+
+  <%- include('header'); %>
+
+  <main id="home" class="hero" role="main">
+    <div class="stars" aria-hidden="true"></div>
+    <div class="dunes" aria-hidden="true">
+      <div class="dune three"></div>
+      <div class="dune two"></div>
+      <div class="dune one"></div>
+      <div class="palms"></div>
+    </div>
+
+    <div class="content container">
+      <h1 class="kufi"> يكتب ليفضح زيف مجتمعٍ ألبسه رداء الفضيلة</h1>
+      <p class="tagline">كلمات الشاعر <strong>رشدي</strong> ومقالاته: نبضٌ ومعرفة.</p>
+
+      <% if (sub === 'ok') { %><div class="alert ok" role="status">تمّ الاشتراك. أهلاً بك!</div><% } %>
+      <% if (sub === 'dup') { %><div class="alert ok" role="status">أنت مشترك مسبقًا.</div><% } %>
+      <% if (sub === 'bad') { %><div class="alert bad" role="alert">الرجاء إدخال بريد صحيح.</div><% } %>
+      <% if (sub === 'err') { %><div class="alert bad" role="alert">تعذّر الاشتراك، حاول لاحقًا.</div><% } %>
+
+      <div class="hero-actions">
+        <a href="/poems" class="btn primary">ابدأ القراءة</a>
+        <a href="/articles" class="btn">اقرأ المقالات</a>
+      </div>
+
+      <!-- بحث -->
+      <div class="container mt-4">
+        <div class="searchbar" role="search" aria-label="بحث في القصائد والمقالات">
+          <input id="search" type="search" inputmode="search" placeholder="ابحث عن قصيدة أو مقال…" aria-label="بحث" />
+          <span class="pill">بحث فوري</span>
+        </div>
+      </div>
+
+      <!-- Marquee احترافي -->
+      <div class="container mt-3">
+        <div class="marquee" aria-live="polite">
+          <div class="marquee-track" id="marqueeTrack">
+            <span class="marquee-quote">كلماتٌ تمشي على الرمل</span><span class="marquee-sep">•</span>
+            <span class="marquee-quote">نبضُ قافيةٍ يوقظ المسافة</span><span class="marquee-sep">•</span>
+            <span class="marquee-quote">صوتُ القصيدة حين يلمسُ القلب</span><span class="marquee-sep">•</span>
+            <% poems.slice(0,5).forEach(p => { %>
+              <span class="marquee-quote">«<%= (p.excerpt && p.excerpt.slice(0,44)) || p.title %>»</span><span class="marquee-sep">•</span>
+            <% }) %>
+            <% articles.slice(0,4).forEach(a => { %>
+              <span class="marquee-quote">مقال: <%= a.title %></span><span class="marquee-sep">•</span>
+            <% }) %>
+            <span class="marquee-quote">حيثُ المعنى يبرقُ كواحة</span><span class="marquee-sep">•</span>
+            <span class="marquee-quote">قصيدةٌ تفتحُ باب نهارٍ جديد</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- القصائد -->
+  <section id="poems" aria-labelledby="poems-heading">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="poems-heading" class="section-title">أحدث القصائد</h2>
+        <a class="btn" href="/poems">عرض كل القصائد →</a>
+      </div>
+      <div id="poemGrid" class="grid poems" role="list">
+        <% poems.forEach(p => { %>
+          <article class="card" role="listitem" data-type="poem" data-id="<%= p._id %>" data-url="/poem/<%= p._id %>" data-tags="<%= (p.tags||[]).join(', ') %>" data-title="<%= p.title %>">
+            <% if (p.imageUrl) { %>
+              <img src="<%= p.imageUrl %>" alt="" loading="lazy" decoding="async"
+                   style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:10px">
+            <% } %>
+            <span class="pill"><%= p.meter || '—' %></span>
+            <h3><%= p.title %></h3>
+            <p class="excerpt"><%= p.excerpt.substring(0, 50) %></p>
+            <div class="meta">
+              <span><%= new Date(p.createdAt).toLocaleDateString('ar-EG') %></span>
+              <span class="chip"><%= (p.tags||[])[0] || 'قصيدة' %></span>
+            </div>
+            <div class="actions">
+              <a class="btn" href="/poem/<%= p._id %>">اقرأ المزيد →</a>
+              <button class="btn later" type="button" onclick="saveLater({id:'<%= p._id %>', type:'poem', title:`<%- p.title %>`, url:'/poem/<%= p._id %>'})">اقرأ لاحقًا ★</button>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- المقالات -->
+  <section id="articles" aria-labelledby="articles-heading">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="articles-heading" class="section-title">المقالات</h2>
+        <a class="btn" href="/articles">عرض كل المقالات →</a>
+      </div>
+      <div id="articleGrid" class="grid articles" role="list">
+        <% articles.forEach(a => { %>
+          <article class="card" role="listitem" data-type="article" data-id="<%= a.slug %>" data-url="/article/<%= a.slug %>" data-tags="<%= (a.tags||[]).join(', ') %>" data-title="<%= a.title %>">
+            <% if (a.imageUrl) { %>
+              <img src="<%= a.imageUrl %>" alt="" loading="lazy" decoding="async"
+                   style="width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:10px">
+            <% } %>
+            <span class="pill">مقال</span>
+            <h3><%= a.title %></h3>
+            <p class="excerpt"><%= a.excerpt.substring(0, 50) %></p>
+            <div class="meta">
+              <span><%= new Date(a.createdAt).toLocaleDateString('ar-EG') %></span>
+              <span class="chip"><%= (a.tags||[])[0] || 'عام' %></span>
+            </div>
+            <div class="actions">
+              <a class="btn" href="/article/<%= a.slug %>">تابع القراءة →</a>
+              <button class="btn later" type="button" onclick="saveLater({id:'<%= a.slug %>', type:'article', title:`<%- a.title %>`, url:'/article/<%= a.slug %>'})">اقرأ لاحقًا ★</button>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- قراءة لاحقًا -->
+  <section id="later" aria-labelledby="later-heading">
+    <div class="container">
+      <h2 id="later-heading" class="section-title">لقراءة لاحقًا</h2>
+      <p class="muted">العناصر التي تحفظها ستظهر هنا على هذا المتصفح فقط.</p>
+      <div id="laterList" class="later-list"></div>
+      <div class="mt-2"><button class="btn" type="button" onclick="clearLater()">مسح القائمة</button></div>
+    </div>
+  </section>
+
+  <!-- عن الشاعر (نسخة احترافية + صورة) -->
+  <section id="about" aria-labelledby="about-heading">
+    <div class="container">
+      <h2 id="about-heading" class="section-title">عن الشاعر</h2>
+      <div class="about-wrap">
+        <img class="about-img" src="/Img/roshdi.jpg" alt="الشاعر رشدي" loading="lazy" decoding="async">
+        <div>
+          <p class="muted" style="margin:0">
+            ولد في 14 رمضان لسنة 1392هـ سنة 1972 ميلادي في جزيرة دارين شرق المملكة العربية السعودية فاغتسل قلبه الطفل ببحرها واختلط دمه الغض بملح هذا الأزرق النائم فكان اللقاء ممشوقا بذاكرة الطفولة واللعب على ساحل البحر وغرس القدم في الطين حتى كاحل الروح فتلونت روح رشدي الغدير بلون هذا البحر فعلمه جده لامه أسرار الغوص وجمع ألؤلؤ وسبر القاع وفتق انواع المرجان عمل صغيرا طفلا بمهنة صيد السمك والغوص حتى الأعماق وهو لم يتجاوز 12 سنه فكان يصنع اقفاص الصيد القراقير بخفة يده التي اذهلت كبار البحارين مما دعا جده لامه (الشيخ جمعه بن حجي الذوادي ) ان يمنح المزيد من وقته لتعليم هذا الموهوب الصغير لغة النوارس ولهجة الريح وعناد البحر فيما كان يكمل دراسته ويختزل مدرسة جده البحرية فتمحورت اغلب قصائدة في حكايات جده عن اهوال البحر وعن حياة الغواص الصعبة وعن خطورة البقاء مع خمسين غواصا مبتلين ليل نهار في سفينة تلهوا بهم رياح الفقد وانين الامواج لمدة تتجاوز الاربعة اشهر في احيانا كثير وبمئونة قليلة تكاد لا تكفيهم فيختلط جوعهم وتعبهم بصوت النهام الذي يشبع صوته أرواحهم الجائعة لليابسة .
+          </p>
+          <div class="badges" aria-label="إحصاءات">
+            <span class="badge">+<%= poems.length %> قصيدة</span>
+            <span class="badge">+<%= articles.length %> مقال</span>
+            <span class="badge">سنوات كتابة: 10+</span>
+          </div>
+          <div class="about-actions">
+            <a class="btn primary" href="/poems">اقرأ القصائد</a>
+            <a class="btn" href="/articles">اطّلع على المقالات</a>
+            <a class="btn later" href="#" aria-disabled="true">ديوان PDF (قريبًا)</a>
+          </div>
+          <form class="inline-form" action="/subscribe" method="post" style="margin-top:8px">
+            <input class="input" type="email" name="email" placeholder="اشترك ليصلك الجديد" required autocomplete="email" />
+            <button class="btn" type="submit">اشترك</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- تواصل -->
+  <section id="contact" aria-labelledby="contact-heading">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="contact-heading" class="section-title">تواصل</h2>
+        <p class="muted" style="margin:0">يسعدني تواصلكم: اقتراحات، تعاون، أو ملاحظات نقدية.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-cards">
+          <a class="contact-card" href="mailto:hello@roshdi.poetry" target="_blank" rel="noopener">
+            <div class="contact-ico">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-open-fill" viewBox="0 0 16 16">
+                    <path d="M8.941.435a2 2 0 0 0-1.882 0l-6 3.2A2 2 0 0 0 0 5.4v.314l6.709 3.932L8 8.928l1.291.718L16 5.714V5.4a2 2 0 0 0-1.059-1.765zM16 6.873l-5.693 3.337L16 13.372v-6.5Zm-.059 7.611L8 10.072.059 14.484A2 2 0 0 0 2 16h12a2 2 0 0 0 1.941-1.516M0 13.373l5.693-3.163L0 6.873z"/>
+                  </svg>
+            </div>
+            <div><div class="contact-title">البريد</div><div class="muted">hello@roshdi.poetry</div></div>
+          </a>
+          <a class="contact-card" href="https://wa.me/971500000000" target="_blank" rel="noopener">
+            <div class="contact-ico">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
+                    <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+                  </svg>
+            </div>
+            <div><div class="contact-title">واتساب</div><div class="muted">‎+971 50 000 0000</div></div>
+          </a>
+          <a class="contact-card" href="https://x.com/roshdi502" aria-disabled="true">
+            <div class="contact-ico">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
+                    <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+                  </svg>
+            </div>
+            <div><div class="contact-title">إكس/تويتر</div><div class="muted">@roshdi</div></div>
+          </a>
+        </div>
+
+        <form class="contact-form" action="/contact" method="post" novalidate>
+          <div class="form-row">
+            <div><label class="sr-only" for="cname">الاسم</label><input id="cname" class="input" type="text" name="name" placeholder="الاسم الكامل" required></div>
+            <div><label class="sr-only" for="cemail">البريد</label><input id="cemail" class="input" type="email" name="email" placeholder="البريد الإلكتروني" required autocomplete="email"></div>
+          </div>
+          <div><label class="sr-only" for="cmsg">رسالتك</label><textarea id="cmsg" class="input" name="message" placeholder="اكتب رسالتك هنا…" required></textarea></div>
+          <div class="form-row">
+            <div><input class="input" type="text" name="subject" placeholder="موضوع الرسالة (اختياري)"></div>
+            <div>
+              <select class="input" name="topic">
+                <option value="">نوع الرسالة</option>
+                <option value="feedback">ملاحظات</option>
+                <option value="collab">تعاون</option>
+                <option value="press">إعلام/صحافة</option>
+                <option value="other">أخرى</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn primary" type="submit">إرسال</button>
+          <small class="muted">لن نستخدم معلوماتك إلا للرد على رسالتك.</small>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <%- include('footer'); %>
+
+  <script>
+    // Theme
+    (function(){ const saved=localStorage.getItem('theme'); if(saved) document.documentElement.setAttribute('data-theme',saved); })();
+    const yr=document.getElementById('year'); if(yr) yr.textContent=new Date().getFullYear();
+
+
+    // Reveal on scroll
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');io.unobserve(e.target);}}),{threshold:.12});
+    document.querySelectorAll('.card').forEach(el=>io.observe(el));
+
+    // Search
+    const search=document.getElementById('search');
+    if(search){
+      search.addEventListener('input',()=>{
+        const q=search.value.trim().toLowerCase();
+        document.querySelectorAll('#poemGrid .card, #articleGrid .card').forEach(c=>{
+          const hay=(c.dataset.title+' '+c.dataset.tags+' '+c.textContent).toLowerCase();
+          c.style.display= hay.includes(q) ? '' : 'none';
+        });
+      });
+    }
+
+    // Marquee pause / reduce motion
+    const track=document.getElementById('marqueeTrack');
+    const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(track && !prefersReduce){
+      track.addEventListener('mouseenter',()=>track.style.animationPlayState='paused');
+      track.addEventListener('mouseleave',()=>track.style.animationPlayState='running');
+    } else if(track && prefersReduce){
+      track.style.animation='none';
+    }
+
+    // Read Later
+    const LATER_KEY='roshdi_later_v1';
+    function getLater(){ try{ return JSON.parse(localStorage.getItem(LATER_KEY)||'[]'); }catch{ return []; } }
+    function setLater(list){ localStorage.setItem(LATER_KEY, JSON.stringify(list)); }
+    function saveLater(item){ const list=getLater(); if(!list.some(x=>x.id===item.id&&x.type===item.type)){ list.push(item); setLater(list); renderLaterList(); } alert('أُضيفت إلى "لقراءة لاحقًا".'); }
+    function removeLater(id, type){ const list=getLater().filter(x=>!(x.id===id&&x.type===type)); setLater(list); renderLaterList(); }
+    function clearLater(){ if(confirm('مسح قائمة القراءة لاحقًا؟')){ setLater([]); renderLaterList(); } }
+    function renderLaterList(){
+      const wrap=document.getElementById('laterList'); if(!wrap) return;
+      const list=getLater();
+      if(list.length===0){ wrap.innerHTML='<div class="muted">لا عناصر محفوظة بعد.</div>'; return; }
+      wrap.innerHTML=list.map(x=>`
+        <div class="later-item">
+          <div class="later-row">
+            <div>
+              <div class="later-title">${x.title}</div>
+              <div class="muted later-type">${x.type==='poem'?'قصيدة':'مقال'}</div>
+            </div>
+            <div class="later-actions">
+              <a class="btn" href="${x.url}">افتح</a>
+              <button class="btn later" type="button" onclick="removeLater('${x.id}','${x.type}')">حذف</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    renderLaterList();
+  </script>
+</body>
+</html>

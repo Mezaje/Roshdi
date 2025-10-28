@@ -1,0 +1,145 @@
+<!-- /views/partials/header.ejs أو حيث تضع الهيدر -->
+<header class="nav" aria-label="شريط التصفح">
+    <div class="container nav-inner">
+      <a class="brand" href="/" aria-label="العودة للصفحة الرئيسية">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <span class="brand-title">رشدي — منصة الشعر</span>
+      </a>
+  
+      <!-- زر القائمة للهاتف -->
+      <button id="menuToggle"
+              class="menu-btn"
+              aria-label="فتح القائمة"
+              aria-controls="siteNav"
+              aria-expanded="false">
+        <!-- أيقونة همبرغر -->
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+  
+      <!-- الروابط: ديسكتوب = صف أفقي / موبايل = لوحة منزلقة -->
+      <nav id="siteNav" class="nav-links" role="navigation">
+        <a href="/">الرئيسية</a>
+        <a href="/poems">القصائد</a>
+        <a href="/articles">المقالات</a>
+        <a href="#later">قراءة لاحقًا</a>
+        <a href="/about">عنّي</a>
+        <a href="#contact">تواصل</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="تبديل النمط">نهاري/ليلي</button>
+        <a class="cta" href="/poems">استكشف</a>
+      </nav>
+  
+      <!-- خلفية نصف شفافة عند فتح القائمة على الهاتف -->
+      <button class="nav-backdrop" type="button" aria-hidden="true" tabindex="-1"></button>
+    </div>
+  </header>
+  
+  <!-- أضف/حدّث في /public/styles.css -->
+  <style>
+  /* ===== Header: تحسين الهاتف والديسكتوب ===== */
+  .nav{position:sticky;top:0;z-index:100}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:56px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+  .brand-title{font-size:16px}
+  .menu-btn{
+    display:none; /* يظهر على الهاتف لاحقًا */
+    width:42px;height:42px;border-radius:12px;
+    border:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.6);
+    backdrop-filter:saturate(1.2) blur(6px);cursor:pointer
+  }
+  [data-theme="night"] .menu-btn{background:rgba(30,24,19,.55);border-color:rgba(255,255,255,.12)}
+  .menu-icon, .menu-icon::before, .menu-icon::after{
+    content:"";display:block;width:20px;height:2px;background:currentColor;margin:0 auto;transition:transform .2s,opacity .2s;border-radius:2px
+  }
+  .menu-icon{position:relative}
+  .menu-icon::before{position:absolute;inset-inline-start:0;top:-6px}
+  .menu-icon::after{position:absolute;inset-inline-start:0;top:6px}
+  
+  /* لوحة الروابط (الحالة الافتراضية للديسكتوب) */
+  .nav-links{display:flex;align-items:center;gap:12px}
+  
+  /* ===== الهاتف: شاشة أصغر من 900px ===== */
+  @media (max-width:900px){
+    .menu-btn{display:inline-flex;align-items:center;justify-content:center}
+    .nav-links{
+      position:fixed;inset:0 0 auto 0; /* أعلى الشاشة */
+      top:56px; /* تحت الشريط */
+      display:grid;gap:8px;padding:16px;
+      background:var(--card);backdrop-filter:blur(8px) saturate(1.2);
+      transform:translateY(-120%);transition:transform .25s ease;
+      border-bottom:1px solid rgba(0,0,0,.06)
+    }
+    .nav.open .nav-links{transform:translateY(0)}
+    .nav-links a, .nav-links .theme-toggle, .nav-links .cta{
+      padding:14px;border-radius:14px
+    }
+    .nav-links .cta{text-align:center}
+    .nav-backdrop{
+      position:fixed;inset:56px 0 0 0; /* يغطي أسفل الشريط */
+      display:none;background:rgba(0,0,0,.25);backdrop-filter:blur(1px)
+    }
+    .nav.open .nav-backdrop{display:block}
+    /* تحوّل أيقونة الهمبرغر إلى X */
+    .nav.open .menu-icon{transform:rotate(45deg)}
+    .nav.open .menu-icon::before{transform:rotate(90deg) translateX(6px)}
+    .nav.open .menu-icon::after{opacity:0}
+  }
+  
+  /* ضمان صف أفقي مرتب على الشاشات الكبيرة */
+  @media (min-width:901px){
+    .nav-backdrop{display:none !important}
+    .nav-links a{padding:10px 14px;border-radius:12px}
+  }
+  
+  /* منع تمرير الصفحة عند فتح القائمة */
+  html.no-scroll, body.no-scroll{overflow:hidden}
+  </style>
+  
+  <!-- أضف/حدّث في سكريبت الصفحة (أسفل الصفحة لديك) -->
+  <script>
+
+  (function setupResponsiveHeader(){
+    const header = document.querySelector('.nav');
+    const menuBtn = document.getElementById('menuToggle');
+    const panel  = document.getElementById('siteNav');
+    const backdrop = document.querySelector('.nav-backdrop');
+  
+    if(!header || !menuBtn || !panel) return;
+  
+    function setOpen(open){
+      header.classList.toggle('open', open);
+      menuBtn.setAttribute('aria-expanded', String(open));
+      document.documentElement.classList.toggle('no-scroll', open);
+    }
+  
+    function toggle(){ setOpen(!header.classList.contains('open')); }
+  
+    menuBtn.addEventListener('click', toggle);
+    if(backdrop){ backdrop.addEventListener('click', ()=>setOpen(false)); }
+  
+    // إغلاق عند اختيار رابط
+    panel.addEventListener('click', (e)=>{
+      const t=e.target;
+      if(t.tagName==='A' || (t.tagName==='BUTTON' && !t.id)){ setOpen(false); }
+    });
+  
+    // ESC
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='Escape' && header.classList.contains('open')) setOpen(false);
+    });
+  
+    // تعطيل الحركة إن كانت مفضلة
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if(reduce.matches){ panel.style.transition='none'; }
+  })();
+  const themeBtn=document.getElementById('themeToggle');
+    if(themeBtn){
+      themeBtn.addEventListener('click',()=>{
+        const cur=document.documentElement.getAttribute('data-theme');
+        const next=cur==='night'?'':'night';
+        if(next) document.documentElement.setAttribute('data-theme',next);
+        else document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', next||'');
+      });
+    }
+  </script>
+  

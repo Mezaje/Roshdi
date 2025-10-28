@@ -1,0 +1,26 @@
+<!-- PATCH 2: /views/admin/unauth.ejs (استبدل الملف كله بهذا) -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .wrap{max-width:700px;margin:auto;padding:32px;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="kufi"><%= title %></h1>
+    <% if (typeof status !== 'undefined') { %>
+      <p class="muted">الحالة: <%= status %></p>
+    <% } %>
+    <% if (typeof message !== 'undefined' && message) { %>
+      <p><%= message %></p>
+    <% } %>
+    <p class="muted">أعد المحاولة. إن لم تظهر نافذة إدخال، جرّب يدويًا:</p>
+    <pre style="direction:ltr;text-align:left;background:#0001;padding:10px;border-radius:10px">curl -i -u ADMIN:PASS http://localhost:4000/admin</pre>
+    <p><a class="btn" href="/">← رجوع للرئيسية</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!-- /views/admin/index.ejs -->
+<%- include('layout_head') %>
+<h1>لوحة التحكم</h1>
+<div class="grid cards">
+  <div class="card">
+    <div class="muted">القصائد</div>
+    <div style="font-weight:800;font-size:28px"><%= stats.pc %></div>
+    <a class="btn secondary" href="/admin/poems">فتح</a>
+  </div>
+  <div class="card">
+    <div class="muted">المقالات</div>
+    <div style="font-weight:800;font-size:28px"><%= stats.ac %></div>
+    <a class="btn secondary" href="/admin/articles">فتح</a>
+  </div>
+  <div class="card">
+    <div class="muted">المشتركين</div>
+    <div style="font-weight:800;font-size:28px"><%= stats.sc %></div>
+  </div>
+</div>
+<%- include('layout_foot'); %>

@@ -1,0 +1,103 @@
+<!-- /views/admin/_layout_head.ejs (Header محسّن + Responsive) -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    :root{--bg:#faf6ee;--card:#fff;--fg:#1f1b16;--muted:#6c6255;--accent:#2f6b6d;--danger:#b5422a}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Cairo,system-ui;background:var(--bg);color:var(--fg)}
+    a{color:var(--accent);text-decoration:none}
+
+    /* Header */
+    .admin-header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #eee;box-shadow:0 4px 14px rgba(0,0,0,.04)}
+    .admin-nav{width:min(1100px,92%);margin:auto;display:flex;align-items:center;justify-content:space-between;padding:10px 8px;gap:10px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;color:#1f1b16}
+    .brand .badge{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #dfb95d, #856423);box-shadow:0 6px 18px rgba(0,0,0,.12)}
+    .nav-right{display:flex;align-items:center;gap:10px}
+    .links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .links a{padding:8px 10px;border-radius:10px}
+    .links a[aria-current="page"]{background:#f3f3f3}
+    .btn{display:inline-block;background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer}
+    .btn.secondary{background:#ddd;color:#222}
+    .btn.danger{background:var(--danger)}
+    .menu-toggle{display:none;border:1px solid #e5e5e5;background:#fff;border-radius:10px;padding:8px 10px;cursor:pointer}
+    .menu-toggle svg{display:block}
+
+    /* Mobile menu */
+    @media (max-width:900px){
+      .admin-nav{padding:10px}
+      .menu-toggle{display:inline-flex;align-items:center;justify-content:center}
+      .links{display:none;flex-direction:column;align-items:stretch;background:#fff;border-top:1px solid #eee;padding:8px;margin-top:8px}
+      .links.open{display:flex}
+      .links a{padding:10px 12px}
+      .nav-right{gap:8px}
+    }
+
+    /* Layout container */
+    .wrap{width:min(1100px,92%);margin:auto;padding:16px}
+    .grid{display:grid;gap:12px}
+    .cards{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+    .card{background:var(--card);border:1px solid #eee;border-radius:12px;padding:14px}
+    table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden}
+    th,td{padding:10px;border-bottom:1px solid #f0f0f0;text-align:right}
+    form.inline{display:inline}
+    input,textarea{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;font-family:Cairo,system-ui}
+    label{font-weight:600;margin:6px 0;display:block}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:800px){.row{grid-template-columns:1fr}}
+    .muted{color:var(--muted)}
+  </style>
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="admin-nav">
+    <div class="brand">
+      <div class="badge" aria-hidden="true"></div>
+      <span>لوحة تحكم — رشدي</span>
+    </div>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="قائمة">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <div class="nav-right">
+      <nav class="links" id="adminLinks">
+        <a href="/admin" class="link" data-path="/admin">لوحة التحكم</a>
+        <a href="/admin/poems" class="link" data-path="/admin/poems">القصائد</a>
+        <a href="/admin/poems/new" class="link" data-path="/admin/poems/new">+ قصيدة</a>
+        <a href="/admin/articles" class="link" data-path="/admin/articles">المقالات</a>
+        <a href="/admin/articles/new" class="link" data-path="/admin/articles/new">+ مقال</a>
+        <a href="/" class="link">↩︎ الموقع</a>
+      </nav>
+
+      <form action="/admin/logout" method="post" class="inline">
+        <button class="btn secondary" type="submit">خروج</button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<script>
+  // Mobile menu toggle
+  (function(){
+    const btn=document.getElementById('menuToggle');
+    const links=document.getElementById('adminLinks');
+    if(btn && links){
+      btn.addEventListener('click',()=>links.classList.toggle('open'));
+      // set active link based on path
+      const cur = location.pathname;
+      links.querySelectorAll('.link[data-path]').forEach(a=>{
+        const p=a.getAttribute('data-path');
+        if (cur===p || (p!=="/admin" && cur.startsWith(p))) a.setAttribute('aria-current','page');
+      });
+    }
+  })();
+</script>

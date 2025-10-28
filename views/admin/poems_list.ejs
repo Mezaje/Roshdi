@@ -1,0 +1,40 @@
+<!-- /views/admin/poems_list.ejs (محدّث: مصغّرات) -->
+<%- include('layout_head', { title }); %>
+<h2>القصائد</h2>
+<% if (flash) { %><div class="admin-card" style="border-left:5px solid #2f6b6d">تمت العملية: <%= flash %></div><% } %>
+<p><a class="btn" href="/admin/poems/new">+ قصيدة جديدة</a></p>
+<div class="admin-table-wrap">
+<table>
+  <thead>
+    <tr><th>الغلاف</th><th>العنوان</th><th>البحر</th><th>الوسوم</th><th>التاريخ</th><th>إجراءات</th></tr>
+  </thead>
+  <tbody>
+    <% poems.forEach(p => { %>
+      <tr>
+        <td style="width:84px">
+          <% if (p.imageUrl) { %>
+            <img src="<%= p.imageUrl %>" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:10px">
+          <% } else { %>
+            <div class="muted" style="font-size:12px">لا صورة</div>
+          <% } %>
+        </td>
+        <td><a href="/poem/<%= p._id %>" target="_blank"><%= p.title %></a></td>
+        <td><%= p.meter || '—' %></td>
+        <td><%= (p.tags||[]).join('، ') %></td>
+        <td><%= new Date(p.createdAt).toLocaleDateString('ar-EG') %></td>
+        <td>
+            <a class="btn" href="/admin/poems/<%= p._id %>/edit">تعديل</a>
+            <form class="inline" method="post" action="/admin/poems/<%= p._id %>/delete"
+                onsubmit="return confirm('حذف نهائي؟ ستُحذف الصورة إن وُجدت.')">
+            <button class="btn danger" type="submit">حذف</button>
+            </form>
+        </td>
+        <!-- /views/admin/poems_list.ejs (جزء الإجراءات) -->
+
+        
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+</div>
+<%- include('layout_foot'); %>

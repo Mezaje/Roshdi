@@ -1,0 +1,126 @@
+<!-- /views/partials/footer.ejs -->
+<footer class="site-footer" role="contentinfo" aria-label="تذييل الموقع">
+    <div class="container footer-grid">
+      <section class="footer-col">
+        <div class="brand footer-brand">
+          <div class="brand-badge" aria-hidden="true"></div>
+          <div>
+            <div class="footer-title">رشدي — منصة الشعر</div>
+            <p class="muted">قصائد عربية ومقالات نقدية ومعرفية. نُعيد وصل الشعر بحياته وإيقاعه.</p>
+          </div>
+        </div>
+        <div class="social" aria-label="روابط الشبكات الاجتماعية">
+          <a class="social-link" href="https://x.com/roshdi502" aria-label="تويتر">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
+                <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+              </svg>          </a>
+          <a class="social-link" href="mailto:hello@roshdi.poetry" aria-label="البريد">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-open-fill" viewBox="0 0 16 16">
+                <path d="M8.941.435a2 2 0 0 0-1.882 0l-6 3.2A2 2 0 0 0 0 5.4v.314l6.709 3.932L8 8.928l1.291.718L16 5.714V5.4a2 2 0 0 0-1.059-1.765zM16 6.873l-5.693 3.337L16 13.372v-6.5Zm-.059 7.611L8 10.072.059 14.484A2 2 0 0 0 2 16h12a2 2 0 0 0 1.941-1.516M0 13.373l5.693-3.163L0 6.873z"/>
+              </svg>          
+            </a>
+          <a class="social-link" href="https://wa.me/971500000000" target="_blank" rel="noopener" aria-label="واتساب">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16">
+                <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
+              </svg>          </a>
+        </div>
+      </section>
+  
+      <nav class="footer-col" aria-labelledby="footer-quicklinks">
+        <h3 id="footer-quicklinks" class="footer-heading">روابط سريعة</h3>
+        <ul class="footer-links">
+          <li><a href="/poems">القصائد</a></li>
+          <li><a href="/articles">المقالات</a></li>
+          <li><a href="#later">قراءة لاحقًا</a></li>
+          <li><a href="/about">عنّي</a></li>
+          <li><a href="#contact">تواصل</a></li>
+        </ul>
+      </nav>
+  
+      <nav class="footer-col" aria-labelledby="footer-resources">
+        <h3 id="footer-resources" class="footer-heading">الموارد</h3>
+        <ul class="footer-links">
+          <li><a href="#" aria-disabled="true">سياسة الخصوصية</a></li>
+          <li><a href="#" aria-disabled="true">الشروط والأحكام</a></li>
+          <li><a href="#" aria-disabled="true">الأسئلة الشائعة</a></li>
+          <li><a href="#" aria-disabled="true">الدعم الفني</a></li>
+        </ul>
+      </nav>
+  
+      <section class="footer-col" aria-labelledby="footer-newsletter">
+        <h3 id="footer-newsletter" class="footer-heading">اشترك في النشرة</h3>
+        <p class="muted">قصائد ومقالات جديدة تصلك عبر البريد.</p>
+        <form class="footer-form" action="/subscribe" method="post">
+          <label class="sr-only" for="newsletterEmail">البريد الإلكتروني</label>
+          <input id="newsletterEmail" class="input" type="email" name="email" placeholder="name@email.com" required autocomplete="email">
+          <button class="btn primary" type="submit">اشترك الآن</button>
+          <small class="muted">بالاشتراك، أنت توافق على <a href="#" aria-disabled="true">سياسة الخصوصية</a>.</small>
+        </form>
+      </section>
+    </div>
+  
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <div>© <span id="year"></span> رشدي. جميع الحقوق محفوظة.</div>
+        <div class="muted">صُنِع بحُب للشعر العربي.</div>
+      </div>
+    </div>
+  
+    <button id="toTop" class="to-top" type="button" aria-label="العودة إلى أعلى">↑</button>
+  </footer>
+  
+  <!-- /public/styles.css (إضافات) -->
+  <style>
+  .site-footer{margin-top:40px;background:linear-gradient(180deg,var(--sand-100),var(--sand-200));border-top:1px solid rgba(0,0,0,.06)}
+  [data-theme="night"] .site-footer{background:linear-gradient(180deg,var(--sand-300),var(--sand-400));border-color:rgba(255,255,255,.06)}
+  .footer-grid{display:grid;gap:22px;padding:28px 0;grid-template-columns:repeat(12,1fr)}
+  .footer-col{display:flex;flex-direction:column;gap:10px}
+  .footer-brand{display:flex;gap:12px}
+  .footer-title{font-weight:800;font-size:18px}
+  .footer-heading{font-weight:800;font-size:16px;margin:0}
+  .footer-links{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+  .footer-links a{padding:6px 8px;border-radius:10px;border:1px solid transparent}
+  .footer-links a:hover{background:var(--sand-200);border-color:rgba(0,0,0,.06)}
+  [data-theme="night"] .footer-links a:hover{background:var(--sand-300)}
+  .footer-form{display:grid;gap:10px;grid-template-columns:1fr auto}
+  .footer-form small{grid-column:1 / -1}
+  .social{display:flex;gap:10px;margin-top:8px}
+  .social-link{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;border:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.6)}
+  [data-theme="night"] .social-link{background:rgba(30,24,19,.55);border-color:rgba(255,255,255,.12)}
+  .social-link:hover{transform:translateY(-2px)}
+  .footer-bottom{border-top:1px solid rgba(0,0,0,.06);background:rgba(255,255,255,.4)}
+  [data-theme="night"] .footer-bottom{background:rgba(30,24,19,.4);border-color:rgba(255,255,255,.08)}
+  .footer-bottom-inner{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:12px 0;flex-wrap:wrap}
+  @media (min-width:1024px){
+    .footer-grid > .footer-col:nth-child(1){grid-column: span 4}
+    .footer-grid > .footer-col:nth-child(2){grid-column: span 2}
+    .footer-grid > .footer-col:nth-child(3){grid-column: span 2}
+    .footer-grid > .footer-col:nth-child(4){grid-column: span 4}
+  }
+  @media (min-width:640px) and (max-width:1023px){
+    .footer-grid{grid-template-columns:repeat(6,1fr)}
+    .footer-grid > .footer-col{grid-column: span 3}
+  }
+  @media (max-width:639px){
+    .footer-grid{grid-template-columns:1fr}
+    .footer-form{grid-template-columns:1fr;gap:8px}
+  }
+  .to-top{position:fixed;inset-inline-end:16px;inset-block-end:16px;z-index:90;width:44px;height:44px;border-radius:12px;border:1px solid rgba(0,0,0,.08);background:var(--sand-200);box-shadow:var(--shadow);cursor:pointer;display:none}
+  .to-top.show{display:grid;place-items:center}
+  .to-top:active{transform:translateY(1px)}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  </style>
+  
+  <!-- أضف أسفل سكريبت الصفحة -->
+  <script>
+  (function(){
+    var yr=document.getElementById('year'); if(yr) yr.textContent=new Date().getFullYear();
+    var t=document.getElementById('toTop');
+    if(!t) return;
+    function v(){ if(window.scrollY>320) t.classList.add('show'); else t.classList.remove('show'); }
+    window.addEventListener('scroll',v,{passive:true});
+    v();
+    t.addEventListener('click',function(){ window.scrollTo({top:0,behavior:'smooth'}); });
+  })();
+  </script>
+  
